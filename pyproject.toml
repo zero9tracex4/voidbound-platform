@@ -12,6 +12,7 @@ entrypoint = "voidbound_platform.main:app"
 dev = [
     "httpx2>=2.12.0",
     "pytest>=9.1.1",
+    "ruff>=0.16.5",
 ]
 [build-system]
 requires = ["uv_build>=0.12.9,<0.13"]

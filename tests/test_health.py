@@ -1,9 +1,9 @@
 from fastapi.testclient import TestClient
 
-from  voidbound_platform.main import app
-
+from voidbound_platform.main import app
 
 client = TestClient(app)
+
 
 def test_health() -> None:
     response = client.get("/health")
