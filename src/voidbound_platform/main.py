@@ -22,3 +22,8 @@ def version() -> dict[str, str]:
 @app.get("/hostname")
 def hostname() -> dict[str, str]:
     return {"hostname": socket.gethostname()}
+
+
+@app.get("/greeting")
+def greeting() -> dict[str, str]:
+    return {"message": os.getenv("APP_GREETING", "Hello from VoidBound")}
