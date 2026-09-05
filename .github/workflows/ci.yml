@@ -49,7 +49,9 @@ jobs:
         run: docker compose -f deploy/compose.yaml config --quiet
 
       - name: Check deployment script syntax
-        run: bash -n scripts/deploy.sh
+        run: |
+          bash -n scripts/deploy.sh
+          bash -n scripts/deploy-remote.sh
 
       - name: Build container image
         run: docker build --tag voidbound-platform:ci .
