@@ -53,3 +53,69 @@ sudo docker compose down
 ```
 
 `down` removes the deployment's container and network. The image remains.
+
+## Update and rollback
+
+Run these commands inside `~/deployments/voidbound-platform` on the VM.
+
+### Save the current configuration
+
+Before updating, preserve the working deployment configuration:
+
+```bash
+cp -i compose.yaml compose.rollback.yaml
+```
+
+If a backup already exists, confirm that it is safe to replace it.
+
+### Deploy an update
+
+Pull the desired release and inspect its digest:
+
+```bash
+sudo docker pull ghcr.io/zero9tracex4/voidbound-platform:sha-<commit>
+sudo docker image inspect \
+  ghcr.io/zero9tracex4/voidbound-platform:sha-<commit> \
+  --format '{{index .RepoDigests 0}}'
+```
+
+Replace `<commit>` with the release's short Git commit ID.
+
+Edit `compose.yaml`:
+- Set `image` to the full image reference containing the new digest.
+- Set `APP_VERSION` to the corresponding commit ID.
+
+Apply and verify:
+
+```bash
+sudo docker compose config --quiet &&
+sudo docker compose up --detach --wait --wait-timeout 60
+```
+
+```bash
+sudo docker compose ps
+curl --fail --silent --show-error http://127.0.0.1:8000/version
+```
+
+Confirm that the container is healthy and uses the intended digest.
+Replacing this single container causes a brief interruption.
+If the health check times out, investigate the logs; rollback is not automatic.
+
+### Roll back
+
+Restore the saved configuration and apply it:
+
+```bash
+cp compose.rollback.yaml compose.yaml
+sudo docker compose config --quiet &&
+sudo docker compose up --detach --wait --wait-timeout 60
+```
+
+Repeat the verification commands above.
+
+The image digest selects the application and its dependencies.
+`APP_VERSION` only controls the reported version; changing it alone
+does not restore the previous image.
+
+This procedure restores container configuration and image contents.
+It does not undo changes to persistent data or database schemas.
