@@ -1,8 +1,9 @@
 services:
   app:
-    image: ghcr.io/zero9tracex4/voidbound-platform@sha256:a6f62b560cfe44f66fc56cc22d016b47ad4fab79ee1cd2f19bc2cdc873ff00d2
+    image: ghcr.io/zero9tracex4/voidbound-platform@sha256:125344f0973f47e9434cc508c4df79ee4ac10374224684d2ab62970370b6090b
     ports:
       - "127.0.0.1:8000:8000"
     environment:
-      APP_VERSION: "fdb3f88"
+      APP_VERSION: "3f3f24f"
+      APP_GREETING: "Hello from devops-node01"
     restart: unless-stopped
