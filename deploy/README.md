@@ -119,3 +119,22 @@ does not restore the previous image.
 
 This procedure restores container configuration and image contents.
 It does not undo changes to persistent data or database schemas.
+
+## Deploy with the workstation script
+
+From the repository root on the workstation:
+
+```bash
+bash scripts/deploy-remote.sh
+```
+
+The script validates the local deployment files, copies the Compose
+configuration and deployment script to `devops-node01`, then runs the
+deployment over SSH. Enter the VM's sudo password when prompted.
+
+It deploys the current local files, including uncommitted changes.
+It does not automatically select the newest published image: the digest
+in `deploy/compose.yaml` determines which image runs.
+
+The remote Compose file is overwritten. Preserve any server-only changes
+or rollback configuration before running this command.
