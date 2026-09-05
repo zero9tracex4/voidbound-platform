@@ -22,8 +22,19 @@ printf 'Pulling deployment image...\n'
 docker compose -f "$compose_file" pull
 
 printf 'Applying deployment and waiting for health...\n'
-docker compose -f "$compose_file" up \
-    --detach --wait --wait-timeout 60
+
+if docker compose -f "$compose_file" up \
+    --detach --wait --wait-timeout 60; then
+    printf 'Deployment is healthy.\n'
+else
+    deploy_status=$?
+    printf 'Deployment failed with exit status %s.\n' "$deploy_status" >&2
+
+    docker compose -f "$compose_file" ps --all || true
+    docker compose -f "$compose_file" logs --tail 50 || true
+
+    exit "$deploy_status"
+fi
 
 docker compose -f "$compose_file" ps
 printf 'Deployment completed successfully.\n'
