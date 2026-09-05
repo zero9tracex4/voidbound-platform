@@ -1,0 +1,10 @@
+services:
+  app:
+    build:
+      context: .
+    image: voidbound-platform:dev
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      APP_VERSION: "${APP_VERSION:-compose-dev}"
+    restart: unless-stopped
