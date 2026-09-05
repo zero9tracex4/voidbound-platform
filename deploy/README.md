@@ -3,7 +3,7 @@
 This configuration runs the published GHCR image pinned by digest.
 It does not build the application on the server.
 
-The current image was built from commit `fdb3f88`.
+The current image was built from commit `3f3f24f`.
 `APP_VERSION` is a display value; the image digest selects the actual code.
 
 ## Deploy from the workstation
