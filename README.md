@@ -9,6 +9,7 @@ A small FastAPI service evolving into a complete DevOps learning project.
 | GET | `/health` | Reports whether the application is responding |
 | GET | `/version` | Reports the configured application version |
 | GET | `/hostname` | Reports the hostname of the current runtime |
+| GET | `/greeting` | Returns `APP_GREETING`, or `Hello from VoidBound` when unset |
 
 `APP_VERSION` controls the value returned by `/version`. If it is not set, the application uses its built-in version.
 
