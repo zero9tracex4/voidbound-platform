@@ -1,0 +1,9 @@
+services:
+  app:
+    image: ghcr.io/zero9tracex4/voidbound-platform@sha256:125344f0973f47e9434cc508c4df79ee4ac10374224684d2ab62970370b6090b
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      APP_VERSION: "3f3f24f"
+      APP_GREETING: "Hello from Azure"
+    restart: unless-stopped
