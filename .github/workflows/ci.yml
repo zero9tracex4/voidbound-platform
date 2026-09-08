@@ -60,6 +60,7 @@ jobs:
         run: |
           docker compose -f deploy/compose.yaml config --quiet
           docker compose -f deploy/compose.azure.yaml config --quiet
+          docker compose -f deploy/compose.edge.yaml config --quiet
       - name: Check deployment script syntax
         run: |
           bash -n scripts/deploy.sh
