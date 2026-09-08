@@ -9,9 +9,12 @@ repo_root="$(cd -- "$script_dir/.." && pwd)"
 
 local_compose="$repo_root/deploy/compose.edge.yaml"
 local_deploy_script="$repo_root/scripts/deploy.sh"
+local_caddyfile="$repo_root/deploy/Caddyfile.edge"
 
 remote_compose="$remote_dir/compose.yaml"
 remote_deploy_script="$remote_dir/deploy.sh"
+remote_caddy_staging="$remote_dir/Caddyfile.edge.new"
+remote_caddyfile="/etc/caddy/Caddyfile"
 
 printf 'Edge host: %s\n' "$edge_host"
 printf 'Validating local edge configuration...\n'
@@ -30,7 +33,13 @@ scp \
     "$local_deploy_script" \
     "$edge_host:${remote_deploy_script}.new"
 
-printf 'Activating uploaded files...\n'
+printf 'Uploading Caddy configuration...\n'
+
+scp \
+    "$local_caddyfile" \
+    "$edge_host:$remote_caddy_staging"
+
+printf 'Activating application deployment files...\n'
 
 ssh "$edge_host" \
     "chmod 0644 '${remote_compose}.new' &&
@@ -38,9 +47,13 @@ ssh "$edge_host" \
      mv '${remote_compose}.new' '${remote_compose}' &&
      mv '${remote_deploy_script}.new' '${remote_deploy_script}'"
 
-printf 'Deploying on %s...\n' "$edge_host"
+printf 'Validating and applying Caddy configuration...\n'
 
 ssh -t "$edge_host" \
-    "sudo '${remote_deploy_script}' '${remote_compose}'"
+    "sudo caddy validate --config '$remote_caddy_staging' &&
+     sudo install -m 0644 '$remote_caddy_staging' '$remote_caddyfile' &&
+     sudo systemctl reload caddy &&
+     rm -f '$remote_caddy_staging' &&
+     sudo '$remote_deploy_script' '$remote_compose'"
 
 printf 'Edge deployment completed successfully.\n'
