@@ -65,6 +65,7 @@ jobs:
         run: |
           bash -n scripts/deploy.sh
           bash -n scripts/deploy-remote.sh
+          bash -n scripts/deploy-edge.sh
 
       - name: Build container image
         run: docker build --tag voidbound-platform:ci .
